@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "clinic-booking-app",
-    "slug": "clinic-booking-app",
+    "name": "frontend",
+    "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "clinicbookingapp",
+    "scheme": "frontend",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
