@@ -16,7 +16,7 @@ export default function SplashScreen() {
       const token = await AsyncStorage.getItem('authToken');
       if (token) {
         // User is logged in, go to home
-        router.replace('/home');
+        router.replace('/(tabs)');
       } else {
         // User is not logged in, go to login
         router.replace('/login');

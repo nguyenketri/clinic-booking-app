@@ -156,6 +156,26 @@ class BookingService {
       throw axiosError.response?.data?.message || (error as Error).message;
     }
   }
+
+  async createBankTransfer(bookingId: string, amount: number): Promise<any> {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      const response = await axios.post(
+        `${API_URL}/payment/bank-transfer`,
+        { bookingId, amount },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      throw axiosError.response?.data?.message || (error as Error).message;
+    }
+  }
 }
 
 export default new BookingService();

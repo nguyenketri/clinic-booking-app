@@ -107,3 +107,13 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ message: "Lỗi server", error: error.message });
   }
 };
+
+exports.getUsersByRole = async (req, res) => {
+  try {
+    const { role } = req.params;
+    const users = await User.find({ role }).select("name email role avatar");
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+};

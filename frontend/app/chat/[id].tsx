@@ -30,7 +30,7 @@ export default function ChatRoomScreen() {
 
   const initChat = async () => {
     try {
-      const userInfoStr = await AsyncStorage.getItem("userInfo");
+      const userInfoStr = await AsyncStorage.getItem("user");
       const token = await AsyncStorage.getItem("authToken");
       if (!userInfoStr || !token) return;
 

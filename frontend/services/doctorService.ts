@@ -9,6 +9,7 @@ export interface Doctor {
   experience: number;
   rating?: number;
   totalRatings?: number;
+  userId?: any;
 }
 
 class DoctorService {

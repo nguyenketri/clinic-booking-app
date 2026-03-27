@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import doctorService, { Doctor } from '../services/doctorService';
 
 export default function HomeScreen() {
@@ -23,13 +24,27 @@ export default function HomeScreen() {
   const [searchText, setSearchText] = useState('');
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useFocusEffect(
     useCallback(() => {
+      loadUserData();
       loadDoctors();
       loadSpecialties();
     }, [])
   );
+
+  const loadUserData = async () => {
+    try {
+      const userStr = await AsyncStorage.getItem("user");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        setCurrentUserId(user._id || user.id);
+      }
+    } catch (error) {
+      console.log("Error loading user data:", error);
+    }
+  };
 
   const loadDoctors = async () => {
     try {
@@ -80,7 +95,7 @@ export default function HomeScreen() {
       );
     }
 
-    setFilteredDoctors(filtered);
+    setFilteredDoctors(filtered.filter(d => d.userId !== currentUserId && d.userId?._id !== currentUserId));
   };
 
   const handleSearch = (text: string) => {
@@ -125,9 +140,24 @@ export default function HomeScreen() {
           </View>
         )}
       </View>
-      <Text style={styles.price}>
-        {Number(item.price).toLocaleString('vi-VN')} VNĐ
-      </Text>
+      <View style={styles.cardFooter}>
+        <Text style={styles.price}>
+          {Number(item.price).toLocaleString('vi-VN')} VNĐ
+        </Text>
+        <TouchableOpacity 
+          style={styles.chatBtn}
+          onPress={() => {
+            const receiverId = item.userId?._id || item.userId;
+            router.push({
+              pathname: '/chat/[id]',
+              params: { id: receiverId, name: item.name }
+            });
+          }}
+        >
+          <MaterialIcons name="chat" size={20} color="#fff" />
+          <Text style={styles.chatBtnText}>Chat</Text>
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 
@@ -350,6 +380,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#0ea5e9',
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  chatBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0ea5e9',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    gap: 4,
+  },
+  chatBtnText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   emptyContainer: {
     flex: 1,

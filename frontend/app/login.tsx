@@ -16,8 +16,8 @@ import authService from '../services/authService';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('dummy@clinic.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('user1@clinic.com');
+  const [password, setPassword] = useState('123');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -101,12 +101,6 @@ export default function LoginScreen() {
             <TouchableOpacity onPress={() => router.push('/register')}>
               <Text style={styles.registerLink}>Đăng ký ngay</Text>
             </TouchableOpacity>
-          </View>
-
-          <View style={styles.demoBox}>
-            <Text style={styles.demoLabel}>Demo Account:</Text>
-            <Text style={styles.demoText}>Email: dummy@clinic.com</Text>
-            <Text style={styles.demoText}>Password: 123456</Text>
           </View>
         </View>
       </ScrollView>

@@ -117,12 +117,18 @@ export default function BookingScreen() {
 
       Alert.alert("Thành công", `Đặt lịch với ${doctorName} thành công!`, [
         {
-          text: "Xem lịch khám",
-          onPress: () => router.push("/(tabs)/mybookings"),
+          text: "Tiếp tục thanh toán",
+          onPress: () => router.push({
+            pathname: "/payment",
+            params: { 
+              bookingId: result._id,
+              amount: result.totalPrice
+            }
+          }),
         },
         {
-          text: "Quay lại danh sách",
-          onPress: () => router.push("/home"),
+          text: "Để sau",
+          onPress: () => router.push("/(tabs)/mybookings"),
         },
       ]);
       setIsSubmitting(false);

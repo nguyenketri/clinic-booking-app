@@ -1,5 +1,35 @@
 const Booking = require("../models/Booking");
 
+// Simulate Bank Transfer (CK) payment
+exports.createBankTransfer = async (req, res) => {
+  try {
+    const { bookingId, amount } = req.body;
+
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: "Lịch khám không tồn tại" });
+    }
+
+    // Set status to pending verification for manually confirmed CK
+    booking.paymentStatus = "pending";
+    await booking.save();
+
+    res.status(200).json({
+      message: "Yêu cầu thanh toán chuyển khoản đã được ghi nhận!",
+      bankInfo: {
+        bankName: "MB Bank",
+        accountNumber: "123456789",
+        accountName: "NGUYEN KE TRI",
+        amount,
+        content: `BookingID ${bookingId.toString().slice(-6).toUpperCase()}`,
+      },
+      bookingId,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+};
+
 // Simulate VNPay payment
 exports.createVNPayPayment = async (req, res) => {
   try {

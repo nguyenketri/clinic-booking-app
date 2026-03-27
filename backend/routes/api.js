@@ -9,10 +9,12 @@ const bookingService = require("../services/bookingService");
 const chatRoutes = require("./chatRoutes");
 
 // ========== AUTH ROUTES ==========
+router.get("/test", (req, res) => res.json({ message: "API is working!" }));
 router.post("/auth/register", authController.register);
 router.post("/auth/login", authController.login);
 router.get("/auth/profile", authMiddleware, authController.getProfile);
 router.put("/auth/profile", authMiddleware, authController.updateProfile);
+router.get("/auth/users/:role", authMiddleware, authController.getUsersByRole);
 
 // ========== DOCTOR ROUTES ==========
 router.get("/doctors", doctorController.getDoctors);
@@ -53,6 +55,11 @@ router.post(
   "/payment/momo",
   authMiddleware,
   paymentController.createMoMoPayment,
+);
+router.post(
+  "/payment/bank-transfer",
+  authMiddleware,
+  paymentController.createBankTransfer,
 );
 router.post("/payment/callback", paymentController.handlePaymentCallback);
 router.post("/payment/mock", authMiddleware, paymentController.mockPayment);

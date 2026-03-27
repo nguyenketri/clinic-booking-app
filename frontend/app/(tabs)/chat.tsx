@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import doctorService from "../../services/doctorService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 export default function ChatListScreen() {
   const [contacts, setContacts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,11 +16,7 @@ export default function ChatListScreen() {
 
   const fetchContacts = async () => {
     try {
-      const userInfoStr = await AsyncStorage.getItem("userInfo");
-      const user = userInfoStr ? JSON.parse(userInfoStr) : null;
-      
       // Simple implementation: Just fetch doctors to chat with
-      // (For 8-point requirement 'Users can chat with each other')
       const doctorsList = await doctorService.getDoctors();
       setContacts(doctorsList);
     } catch (error) {
@@ -29,12 +26,12 @@ export default function ChatListScreen() {
     }
   };
 
-  const openChat = (receiver) => {
-    // Navigate to chat room with receiver's user ID (since doctor object has userId field)
-    const receiverId = receiver.userId._id || receiver.userId;
+  const openChat = (receiver: any) => {
+    // Navigate to chat room with receiver's user ID (doctors have userId field)
+    const receiverId = receiver.userId?._id || receiver.userId;
     router.push({
       pathname: "/chat/[id]",
-      params: { id: receiverId, name: receiver.name }
+      params: { id: receiverId || receiver._id, name: receiver.name }
     });
   };
 
@@ -54,7 +51,7 @@ export default function ChatListScreen() {
             </View>
             <View>
               <Text style={styles.contactName}>{item.name}</Text>
-              <Text style={styles.contactSub}>{item.specialty}</Text>
+              <Text style={styles.contactSub}>{item.specialty || "Bác sĩ"}</Text>
             </View>
           </TouchableOpacity>
         )}
